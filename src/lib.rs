@@ -7,7 +7,10 @@ pub use directives::*;
 pub use error::*;
 
 use smacro::s;
-use std::{collections::HashMap, fmt::Display};
+use std::{
+    collections::HashMap,
+    fmt::{Display, Write},
+};
 
 /// A simple value type used in templating context.
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
@@ -72,11 +75,11 @@ pub enum Token {
 impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Token::Slice(s) => write!(f, "{s}"),
-            Token::Symbol(s) => write!(f, "{s}"),
-            Token::Int(i) => write!(f, "{i}"),
-            Token::Float(n) => write!(f, "{n}"),
-            Token::Uknown(c) => write!(f, "{c}"),
+            Token::Slice(s) => f.write_str(s),
+            Token::Symbol(s) => f.write_char(*s),
+            Token::Int(i) => f.write_str(&i.to_string()),
+            Token::Float(n) => f.write_str(&n.to_string()),
+            Token::Uknown(c) => f.write_char(*c),
         }
     }
 }
